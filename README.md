@@ -1,8 +1,8 @@
 c-compiler
 ==========
-name: Zhishen Wen
+A simple C to LC3 compiler.
 
-extra credits:
-1. finished Global variables;
-2. finished Subtraction;
-3. finished Function calls.
+Extra features:<br>
+1. Support global variables;<br>
+2. Support subtraction;<br>
+3. Support nested function calls.
