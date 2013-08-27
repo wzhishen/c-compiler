@@ -1,0 +1,60 @@
+	;; LINE 1: int fun (int a, int b) {
+	;; prologue for fun
+fun	ADD SP, SP, -1 ; push return value
+	ADD SP, SP, -1 ; push return address
+	STR R7, SP, 0
+	ADD SP, SP, -1 ; push FP
+	STR FP, SP, 0
+	ADD SP, SP, -1 ; push local var
+	ADD FP, SP, 0 ; set FP
+	ADD SP, SP, -1 ; push local var
+	;; prologue ends
+
+	;; LINE 2: int x, y;
+
+	;; LINE 3: x = superfun (a, 4, b);
+	LDR R0, FP, 5 ; read b
+	ADD SP, SP, -1 ; push variable argument
+	STR R0, SP, 0
+	AND R0, R0, 0
+	ADD R0, R0, 4
+	ADD SP, SP, -1 ; push integer literal argument
+	STR R0, SP, 0
+	LDR R0, FP, 4 ; read a
+	ADD SP, SP, -1 ; push variable argument
+	STR R0, SP, 0
+	JSR superfun ; jump to subroutine 'superfun'
+	LDR R0, SP, -3 ; read return value
+	STR R0, FP, 0 ; write return value to x
+
+	;; LINE 4: y = notfun ();
+	JSR notfun ; jump to subroutine 'notfun'
+	LDR R0, SP, -3 ; read return value
+	STR R0, FP, -1 ; write return value to y
+
+	;; LINE 5: onemore (x);
+	LDR R0, FP, 0 ; read x
+	ADD SP, SP, -1 ; push variable argument
+	STR R0, SP, 0
+	JSR onemore ; jump to subroutine 'onemore'
+	LDR R0, SP, -3 ; read return value
+
+	;; LINE 6: return x + y;
+	LDR R0, FP, 0 ; read x
+	LDR R1, FP, -1 ; read y
+	ADD R0, R0, R1
+	STR R0, FP, 3 ; write return value
+
+	;; LINE 7: }
+	;; epilogue starts
+	ADD SP, SP, 1 ; pop local var
+	ADD SP, SP, 1 ; pop local var
+	LDR FP, SP, 0 ; restore old FP
+	ADD SP, SP, 1
+	LDR R7, SP, 0 ; restore old PC
+	ADD SP, SP, 1
+	ADD SP, SP, 1 ; pop return value
+	ADD SP, SP, 1 ; pop param
+	ADD SP, SP, 1 ; pop param
+	RET
+	;; epilogue ends

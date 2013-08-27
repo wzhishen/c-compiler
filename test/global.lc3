@@ -1,0 +1,44 @@
+	;; LINE 1: int x;
+	;; LINE 2: int y, z;
+	;; LINE 3: (BLANK LINE)
+	;; LINE 4: int fun (int a) {
+	;; prologue for fun
+fun	ADD SP, SP, -1 ; push return value
+	ADD SP, SP, -1 ; push return address
+	STR R7, SP, 0
+	ADD SP, SP, -1 ; push FP
+	STR FP, SP, 0
+	ADD SP, SP, -1 ; push local var
+	ADD FP, SP, 0 ; set FP
+	;; prologue ends
+
+	;; LINE 5: int t = a + x;
+	LDR R0, FP, 4 ; read a
+	LDR R1, GP, 1 ; read global x
+	ADD R0, R0, R1
+	STR R0, FP, 0 ; write t
+
+	;; LINE 6: y = z + 7;
+	LDR R0, GP, 4 ; read global z
+	AND R1, R1, 0
+	ADD R1, R1, 7
+	ADD R0, R0, R1
+	STR R0, GP, 3 ; write global y
+
+	;; LINE 7: return t + y;
+	LDR R0, FP, 0 ; read t
+	LDR R1, GP, 3 ; read global y
+	ADD R0, R0, R1
+	STR R0, FP, 3 ; write return value
+
+	;; LINE 8: }
+	;; epilogue starts
+	ADD SP, SP, 1 ; pop local var
+	LDR FP, SP, 0 ; restore old FP
+	ADD SP, SP, 1
+	LDR R7, SP, 0 ; restore old PC
+	ADD SP, SP, 1
+	ADD SP, SP, 1 ; pop return value
+	ADD SP, SP, 1 ; pop param
+	RET
+	;; epilogue ends

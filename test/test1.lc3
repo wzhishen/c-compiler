@@ -1,0 +1,24 @@
+	;; LINE 1: int fun () {
+	;; prologue for fun
+fun	ADD SP, SP, -1 ; push return value
+	ADD SP, SP, -1 ; push return address
+	STR R7, SP, 0
+	ADD SP, SP, -1 ; push FP
+	STR FP, SP, 0
+	ADD FP, SP, -1 ; set FP
+	;; prologue ends
+
+	;; LINE 2: return 4;
+	AND R0, R0, 0
+	ADD R0, R0, 4
+	STR R0, FP, 3 ; write return value
+
+	;; LINE 3: }
+	;; epilogue starts
+	LDR FP, SP, 0 ; restore old FP
+	ADD SP, SP, 1
+	LDR R7, SP, 0 ; restore old PC
+	ADD SP, SP, 1
+	ADD SP, SP, 1 ; pop return value
+	RET
+	;; epilogue ends
